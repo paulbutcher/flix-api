@@ -1,4 +1,4 @@
-use Api.{Api, parse}
+use Api.parse
 
 def generate(): Result[Bool, String] \ IO =
     use Result.flatMap;
