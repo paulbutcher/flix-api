@@ -15,7 +15,6 @@ def index(api: Api): String =
                 ("crossorigin", "anonymous")
         ) ++
         e("body") +< (
-            e("h1") +< t("Hello world!") ++
             sidebar(api) ++
             e("script") +=
                 ("src", "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js") +=
