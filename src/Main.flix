@@ -3,7 +3,6 @@ use Api.parse
 def generate(): Result[Bool, String] \ IO =
     use Result.flatMap;
     let* api = parse("api.json");
-    println(api);
     let* _ = File.mkdir("site");
     File.write("site/index.html", index(api))
 
