@@ -2,16 +2,18 @@ use Html.html
 use Api.{Api, parse}
 use Api.Api.Api
 
-def generateNs(api: Api, ns: String): Result[Bool, String] \ IO =
-    File.write("site/${ns}.html", ns |> mkNamespace(api) |> template |> html)
+def generateNs(api: Api, mdToHtml: String -> String, ns: String): Result[Bool, String] \ IO =
+    File.write("site/${nsToUri(ns)}.html",
+        ns |> nspace(api, mdToHtml) |> template |> html)
 
 def generate(): Result[Unit, String] \ IO =
     use Result.flatMap;
+    let mdToHtml = CommonMark.mkRenderer();
     let* api = parse("api.json");
     let* _ = File.mkdir("site");
     match api {
-        case Api(_, namespaces, _, _, _, _) =>
-            namespaces |> Result.traverseX(generateNs(api))
+        case Api(_, nss, _, _, _, _) =>
+            nss |> Result.traverseX(generateNs(api, mdToHtml))
     }
 
 def main(): Unit \ IO =
