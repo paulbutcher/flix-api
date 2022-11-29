@@ -3,7 +3,7 @@ namespace Api {
     use Json.JsonError.JsonError
     use Json.FromJson
     use Json/FromJson.fromJsonAt
-    use Json/Path.{Path, !!, apply}
+    use Json/Path.Path
 
     pub enum Api(String, List[String], Map[String, List[Class]], Map[String, List[Enum]], Map[String, List[TypeAlias]], Map[String, List[Def]])
     pub enum Class(Sym, List[String], List[String], List[String], TParam, List[SuperClass], List[Sig], List[Instance])
