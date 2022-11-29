@@ -5,21 +5,21 @@ namespace Api {
     use Json/FromJson.fromJsonAt
     use Json/Path.{Path, !!, apply}
 
-    pub enum Api(String, List[String], Map[String, List[Class]], Map[String, List[Enum]], Map[String, List[TypeAlias]], Map[String, List[Def]]) with ToString
-    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[SuperClass], List[Sig], List[Instance]) with ToString
-    pub enum Enum(Sym, List[String], List[String], List[TParam], List[Case], List[Sym], List[Sym]) with ToString
-    pub enum TypeAlias(Sym, List[String], List[TParam], String, Loc) with ToString
-    pub enum Def(String, Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc) with ToString
-    pub enum Sym(List[String], String, Loc) with ToString
-    pub enum ClassSym(Sym, String, Loc) with ToString
-    pub enum Loc(String, Int32, Int32) with ToString
-    pub enum TParam(String, String) with ToString
-    pub enum FParam(String, String) with ToString
-    pub enum SuperClass(Sym, String) with ToString
-    pub enum Sig(ClassSym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc) with ToString
-    pub enum Instance(Sym, List[String], String, List[Tc], Loc) with ToString
-    pub enum Case(String, String) with ToString
-    pub enum Tc(Sym, String) with ToString
+    pub enum Api(String, List[String], Map[String, List[Class]], Map[String, List[Enum]], Map[String, List[TypeAlias]], Map[String, List[Def]])
+    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[SuperClass], List[Sig], List[Instance])
+    pub enum Enum(Sym, List[String], List[String], List[TParam], List[Case], List[Sym], List[Sym])
+    pub enum TypeAlias(Sym, List[String], List[TParam], String, Loc)
+    pub enum Def(String, Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc)
+    pub enum Sym(List[String], String, Loc)
+    pub enum ClassSym(Sym, String, Loc)
+    pub enum Loc(String, Int32, Int32)
+    pub enum TParam(String, String)
+    pub enum FParam(String, String)
+    pub enum SuperClass(Sym, String)
+    pub enum Sig(ClassSym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc)
+    pub enum Instance(Sym, List[String], String, List[Tc], Loc)
+    pub enum Case(String, String)
+    pub enum Tc(Sym, String)
 
     pub def mkErrorString(x: JsonError): String = match x {
         case JsonError(p, ss) => "Error at ${p}:\n${Set.join("\n", ss)}"
