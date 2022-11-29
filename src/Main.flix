@@ -1,10 +1,18 @@
-use Api.parse
+use Html.html
+use Api.{Api, parse}
+use Api.Api.Api
 
-def generate(): Result[Bool, String] \ IO =
+def generateNs(api: Api, ns: String): Result[Bool, String] \ IO =
+    File.write("site/${ns}.html", ns |> mkNamespace(api) |> template |> html)
+
+def generate(): Result[Unit, String] \ IO =
     use Result.flatMap;
     let* api = parse("api.json");
     let* _ = File.mkdir("site");
-    File.write("site/index.html", index(api))
+    match api {
+        case Api(_, namespaces, _, _, _, _) =>
+            namespaces |> Result.traverseX(generateNs(api))
+    }
 
 def main(): Unit \ IO =
     match generate() {
