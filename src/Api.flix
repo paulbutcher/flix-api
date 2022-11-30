@@ -6,20 +6,19 @@ namespace Api {
     use Json/Path.Path
 
     pub enum Api(String, List[String], Map[String, List[Class]], Map[String, List[Enum]], Map[String, List[TypeAlias]], Map[String, List[Def]])
-    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[SuperClass], List[Sig], List[Instance])
+    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[With], List[Sig], List[Instance])
     pub enum Enum(Sym, List[String], List[String], List[TParam], List[Case], List[Sym], List[Sym])
     pub enum TypeAlias(Sym, List[String], List[TParam], String, Loc)
-    pub enum Def(String, Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc)
+    pub enum Def(String, Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[With], Loc)
     pub enum Sym(List[String], String, Loc)
     pub enum ClassSym(Sym, String, Loc)
     pub enum Loc(String, Int32, Int32)
     pub enum TParam(String, String)
     pub enum FParam(String, String)
-    pub enum SuperClass(Sym, String)
-    pub enum Sig(ClassSym, List[String], List[String], List[TParam], List[FParam], String, String, List[Tc], Loc)
-    pub enum Instance(Sym, List[String], String, List[Tc], Loc)
+    pub enum With(Sym, String)
+    pub enum Sig(ClassSym, List[String], List[String], List[TParam], List[FParam], String, String, List[With], Loc)
+    pub enum Instance(Sym, List[String], String, List[With], Loc)
     pub enum Case(String, String)
-    pub enum Tc(Sym, String)
 
     pub def mkErrorString(x: JsonError): String = match x {
         case JsonError(p, ss) => "Error at ${p}:\n${Set.join("\n", ss)}"
@@ -144,13 +143,13 @@ namespace Api {
             Ok(FParam(name, tpe))
     }
 
-    instance FromJson[SuperClass] {
-        pub def fromJsonAt(p: Path, json: JsonElement): Result[SuperClass, JsonError] = 
+    instance FromJson[With] {
+        pub def fromJsonAt(p: Path, json: JsonElement): Result[With, JsonError] = 
             use Result.flatMap;
             let* obj = fromJsonAt(p, json);
             let* sym = getAtKey(p, "sym", obj);
             let* tpe = getAtKey(p, "tpe", obj);
-            Ok(SuperClass(sym, tpe))
+            Ok(With(sym, tpe))
     }
 
     instance FromJson[Sig] {
@@ -188,15 +187,6 @@ namespace Api {
             let* tag = getAtKey(p, "tag", obj);
             let* tpe = getAtKey(p, "tpe", obj);
             Ok(Case(tag, tpe))
-    }
-
-    instance FromJson[Tc] {
-        pub def fromJsonAt(p: Path, json: JsonElement): Result[Tc, JsonError] =
-            use Result.flatMap;
-            let* obj = fromJsonAt(p, json);
-            let* sym = getAtKey(p, "sym", obj);
-            let* tpe = getAtKey(p, "tpe", obj);
-            Ok(Tc(sym, tpe))
     }
 
     pub def parse(filename: String): Result[Api, String] \ IO =

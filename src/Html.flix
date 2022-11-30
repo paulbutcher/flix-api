@@ -19,7 +19,7 @@ namespace Html {
     def fmtAttrs(attrs: Map[String, String]): String =
         attrs |> Map.joinWith(fmtAttr, " ")
 
-    def fmtAttr(k: String, v: String): String = "${k} = \"${v}\""
+    def fmtAttr(k: String, v: String): String = "${k}=\"${v}\""
 
     pub def doctype(x: String): Chain[Element] = Chain.singleton(DocType(x))
 

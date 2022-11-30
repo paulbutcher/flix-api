@@ -15,7 +15,8 @@ def template(content: Chain[Element]): Chain[Element] =
                 ("crossorigin", "anonymous") ++
             e("link") +=
                 ("href", "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css") +=
-                ("rel", "stylesheet")) ++
+                ("rel", "stylesheet") ++
+            e("link") += ("href", "site.css") += ("rel", "stylesheet")) ++
         e("body") +< (
             e("div") += ("class", "container-xxl") +<
                 content ++

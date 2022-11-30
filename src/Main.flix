@@ -11,6 +11,7 @@ def generate(): Result[Unit, String] \ IO =
     let mdToHtml = CommonMark.mkRenderer();
     let* api = parse("api.json");
     let* _ = File.mkdir("site");
+    let* _ = File.copyOver(src = "resources/site.css", "site/site.css");
     match api {
         case Api(_, nss, _, _, _, _) =>
             nss |> Result.traverseX(generateNs(api, mdToHtml))
