@@ -1,6 +1,6 @@
 use Html.{Element, t, e, +=, +<}
 use Html.Element.Text
-use Api.{Api, Class, TParam, With, Loc, Sig, FParam, Def, Instance}
+use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case}
 use Api.Api.Api
 use Api.Class.Class
 use Api.Sym.Sym
@@ -11,6 +11,8 @@ use Api.Sig.Sig
 use Api.FParam.FParam
 use Api.Def.Def
 use Api.Instance.Instance
+use Api.Enum.Enum
+use Api.Case.Case
 
 def nsToUri(ns: String): String =
     ns |> String.replace(from = "/", to = "%2F")
@@ -22,6 +24,8 @@ def sym(s: String): Chain[Element] = span("sym") +< t(s)
 def clz(s: String): Chain[Element] = span("clz") +< t(s)
 
 def ann(s: String): Chain[Element] = span("ann") +< t(s)
+
+def tag(s: String): Chain[Element] = span("tag") +< t(s)
 
 def h1(s: String): Chain[Element] = e("h1") +< t(s)
 
@@ -74,6 +78,14 @@ def wth(sc: With): Chain[Element] = match sc {
 def withs(scs: List[With]): Chain[Element] = 
     ifNotEmpty(scs, () ->
         t(" ") ++ t("with ") ++ mapIntersperse(wth, t(", "), scs))
+
+def derivation(d: Sym): Chain[Element] = match d {
+    case Sym(n, _) => clz(n)
+}
+
+def derivations(ds: List[Sym]): Chain[Element] = 
+    ifNotEmpty(ds, () ->
+        t(" ") ++ t("with ") ++ mapElem(derivation, ds))
 
 def tpe(t0: String): Chain[Element] =
     span("tpe") +< t(t0)
@@ -140,6 +152,16 @@ def insts(v: String, is: List[Instance]): Chain[Element] =
         h6("Instances") ++
         mapElem(inst(v), is))
 
+def cse(c: Case): Chain[Element] = match c {
+    case Case(tg, t0) =>
+        e("div") +< (
+            e("code") +< (
+                t("case ") ++ tag(tg) ++ t("(") ++ tpe(t0) ++ t(")")))
+}
+
+def cases(cs: List[Case]): Chain[Element] =
+    mapElem(cse, cs)
+
 def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = match c {
     case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) =>
         e("div") += ("class", "border") +< (
@@ -156,8 +178,23 @@ def classes(mdToHtml: String -> String, v: String, cs: List[Class]): Chain[Eleme
     h2("Classes") ++
     mapElem(clazz(mdToHtml, v), cs)
 
+def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match en {
+    case Enum(Sym(name, loc), d, _, tps, cs, ds, _) =>
+        e("div") += ("class", "border") +< (
+            link(v, loc) ++
+            e("code") +< (
+                t("enum ") ++ sym(name) ++ tparams(verbose = true, tps) ++ derivations(ds)) ++
+            cases(cs) ++
+            doc(mdToHtml, d))
+}
+
+def enums(mdToHtml: String -> String, v: String, es: List[Enum]): Chain[Element] =
+    h2("Enums") ++
+    mapElem(enm(mdToHtml, v), es)
+
 def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
-    case Api(v, _, cs, _enums, _aliases, _defs) =>
+    case Api(v, _, cs, es, _aliases, _defs) =>
         h1(ns) ++
-        (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v))
+        (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v)) ++
+        (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v))
 }
