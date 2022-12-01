@@ -129,15 +129,15 @@ namespace Namespace {
             h6("Signatures") ++
             mapElem(signature, sigs))
 
-    def defn(d: Def): Chain[Element] = match d {
+    def classDefn(d: Def): Chain[Element] = match d {
         case Def(Sym(name, _), _, anns, tps, fps, t0, ef, ws, _) =>
             defOrSig(name, Option.getWithDefault(Nil, anns), tps, fps, t0, ef, ws)
     }
 
-    def defs(ds: List[Def]): Chain[Element] = 
+    def classDefs(ds: List[Def]): Chain[Element] = 
         ifNotEmpty(ds, () ->
             h6("Definitions") ++
-            mapElem(defn, ds))
+            mapElem(classDefn, ds))
 
     def inst(v: String, i: Instance): Chain[Element] = match i {
         case Instance(_, _, t0, ws, loc) =>
@@ -169,7 +169,7 @@ namespace Namespace {
                     t("class ") ++ sym(name) ++ tparams(verbose = true, tp :: Nil) ++ withs(scs)) ++
                 doc(mdToHtml, d) ++
                 signatures(sigs) ++
-                defs(ds) ++
+                classDefs(ds) ++
                 insts(v, is))
     }
 
@@ -208,11 +208,25 @@ namespace Namespace {
             h2("Type Aliases") ++
             mapElem(aliaz(mdToHtml, v), as0))
 
+    def defn(mdToHtml: String -> String, v: String, d0: Def): Chain[Element] = match d0 {
+        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) =>
+            e("div") += ("class", "border") +< (
+                link(v, loc) ++
+                defOrSig(name, Option.getWithDefault(Nil, anns), tps, fps, t0, ef, ws) ++
+                doc(mdToHtml, d))
+    }
+
+    def defs(mdToHtml: String -> String, v: String, d0: List[Def]): Chain[Element] =
+        ifNotEmpty(d0, () ->
+            h2("Definitions") ++
+            mapElem(defn(mdToHtml, v), d0))
+
     pub def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
-        case Api(v, _, cs, es, as0, _defs) =>
+        case Api(v, _, cs, es, as0, ds) =>
             h1(ns) ++
             (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v)) ++
             (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v)) ++
-            (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v))
+            (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v)) ++
+            (ds |> Map.getWithDefault(ns, Nil) |> defs(mdToHtml, v))
     }
 }
