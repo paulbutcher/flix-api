@@ -36,6 +36,12 @@ def ifNotEmpty(xs: List[a], f: Unit -> Chain[Element]): Chain[Element] = match x
     case _ => f()
 }
 
+def mapElem(f: a -> Chain[Element], xs: List[a]): Chain[Element] =
+    xs |> List.toChain |> Chain.flatMap(f)
+
+def mapIntersperse(f: a -> Chain[Element], sep: Chain[Element], xs: List[a]): Chain[Element] =
+    xs |> List.map(f) |> List.intersperse(sep) |> List.fold
+
 def link(v: String, loc: Loc): Chain[Element] = match loc {
     case Loc(f, l1, l2) =>
         e("div") += ("class", "float-end") +< (
@@ -58,9 +64,7 @@ def tparam(verbose: {verbose = Bool}, tp: TParam): Chain[Element] = match tp {
 }
 
 def tparams(verbose: {verbose = Bool}, tps: List[TParam]): Chain[Element] = 
-    t("[") ++
-    (tps |> List.toChain |> Chain.map(tparam(verbose)) |> Chain.intersperse(t(", ")) |> Chain.flatten) ++
-    t("]")
+    t("[") ++ mapIntersperse(tparam(verbose), t(", "), tps) ++ t("]")
 
 def wth(sc: With): Chain[Element] = match sc {
     case With(Sym(n, _), tpe) =>
@@ -69,8 +73,7 @@ def wth(sc: With): Chain[Element] = match sc {
 
 def withs(scs: List[With]): Chain[Element] = 
     ifNotEmpty(scs, () ->
-        t(" ") ++ t("with ") ++
-            (scs |> List.map(wth) |> List.intersperse(t(", ")) |> List.fold))
+        t(" ") ++ t("with ") ++ mapIntersperse(wth, t(", "), scs))
 
 def tpe(t0: String): Chain[Element] =
     span("tpe") +< t(t0)
@@ -83,9 +86,7 @@ def fparam(fp: FParam): Chain[Element] = match fp {
 }
 
 def fparams(fps: List[FParam]): Chain[Element] =
-    t("(") ++
-    (fps |> List.toChain |> Chain.map(fparam) |> Chain.intersperse(t(", ")) |> Chain.flatten) ++
-    t(")")
+    t("(") ++ mapIntersperse(fparam, t(", "), fps) ++ t(")")
 
 def effect(ef: String): Chain[Element] =
     if (String.isEmpty(ef))
@@ -95,8 +96,7 @@ def effect(ef: String): Chain[Element] =
 
 def annotations(anns: List[String]): Chain[Element] = 
     ifNotEmpty(anns, () ->
-        (anns |> List.toChain |> Chain.map(ann) |> Chain.intersperse(t(", ")) |> Chain.flatten) ++
-        e("br"))
+        mapIntersperse(ann, t(", "), anns) ++ e("br"))
 
 def defOrSig(name: String, anns: List[String], tps: List[TParam], fps: List[FParam], t0: String, ef: String, ws: List[With]): Chain[Element] =
     e("div") +<
@@ -116,7 +116,7 @@ def signature(sig: Sig): Chain[Element] = match sig {
 def signatures(sigs: List[Sig]): Chain[Element] = 
     ifNotEmpty(sigs, () ->
         h6("Signatures") ++
-        (sigs |> List.toChain |> Chain.flatMap(signature)))
+        mapElem(signature, sigs))
 
 def defn(d: Def): Chain[Element] = match d {
     case Def(Sym(name, _), _, anns, tps, fps, t0, ef, ws, _) =>
@@ -126,7 +126,7 @@ def defn(d: Def): Chain[Element] = match d {
 def defs(ds: List[Def]): Chain[Element] = 
     ifNotEmpty(ds, () ->
         h6("Definitions") ++
-        (ds |> List.toChain |> Chain.flatMap(defn)))
+        mapElem(defn, ds))
 
 def inst(v: String, i: Instance): Chain[Element] = match i {
     case Instance(_, _, t0, ws, loc) =>
@@ -138,7 +138,7 @@ def inst(v: String, i: Instance): Chain[Element] = match i {
 def insts(v: String, is: List[Instance]): Chain[Element] = 
     ifNotEmpty(is, () ->
         h6("Instances") ++
-        (is |> List.toChain |> Chain.flatMap(inst(v))))
+        mapElem(inst(v), is))
 
 def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = match c {
     case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) =>
@@ -154,7 +154,7 @@ def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = mat
 
 def classes(mdToHtml: String -> String, v: String, cs: List[Class]): Chain[Element] =
     h2("Classes") ++
-    (cs |> List.toChain |> Chain.flatMap(clazz(mdToHtml, v)))
+    mapElem(clazz(mdToHtml, v), cs)
 
 def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
     case Api(v, _, cs, _enums, _aliases, _defs) =>
