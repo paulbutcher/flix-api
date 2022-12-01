@@ -1,22 +1,21 @@
 namespace Api {
-    use Json.{JsonElement, JsonError, getAtKey}
+    use Json.{JsonElement, JsonError, getAtKey, getAtKeyOpt}
     use Json.JsonError.JsonError
     use Json.FromJson
     use Json/FromJson.fromJsonAt
     use Json/Path.Path
 
     pub enum Api(String, List[String], Map[String, List[Class]], Map[String, List[Enum]], Map[String, List[TypeAlias]], Map[String, List[Def]])
-    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[With], List[Sig], List[Instance])
+    pub enum Class(Sym, List[String], List[String], List[String], TParam, List[With], List[Sig], List[Def], List[Instance])
     pub enum Enum(Sym, List[String], List[String], List[TParam], List[Case], List[Sym], List[Sym])
     pub enum TypeAlias(Sym, List[String], List[TParam], String, Loc)
-    pub enum Def(String, Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[With], Loc)
-    pub enum Sym(List[String], String, Loc)
-    pub enum ClassSym(Sym, String, Loc)
+    pub enum Def(Sym, List[String], Option[List[String]], List[TParam], List[FParam], String, String, List[With], Loc)
+    pub enum Sym(String, Loc)
     pub enum Loc(String, Int32, Int32)
     pub enum TParam(String, String)
     pub enum FParam(String, String)
     pub enum With(Sym, String)
-    pub enum Sig(ClassSym, List[String], List[String], List[TParam], List[FParam], String, String, List[With], Loc)
+    pub enum Sig(Sym, List[String], List[String], List[TParam], List[FParam], String, String, List[With], Loc)
     pub enum Instance(Sym, List[String], String, List[With], Loc)
     pub enum Case(String, String)
 
@@ -48,8 +47,9 @@ namespace Api {
             let* tp = getAtKey(p, "tparam", obj);
             let* scs = getAtKey(p, "superClasses", obj);
             let* sigs = getAtKey(p, "sigs", obj);
+            let* defs = getAtKey(p, "defs", obj);
             let* instances = getAtKey(p, "instances", obj);
-            Ok(Class(sym, doc, ann, mod, tp, scs, sigs, instances))
+            Ok(Class(sym, doc, ann, mod, tp, scs, sigs, defs, instances))
     }
 
     instance FromJson[Enum] {
@@ -82,37 +82,25 @@ namespace Api {
         pub def fromJsonAt(p: Path, json: JsonElement): Result[Def, JsonError] = 
             use Result.flatMap;
             let* obj = fromJsonAt(p, json);
-            let* name = getAtKey(p, "name", obj);
             let* sym = getAtKey(p, "sym", obj);
             let* doc = getAtKey(p, "doc", obj);
-            let* ann = getAtKey(p, "ann", obj);
+            let* ann = getAtKeyOpt(p, "ann", obj);
             let* tps = getAtKey(p, "tparams", obj);
             let* fps = getAtKey(p, "fparams", obj);
             let* tpe = getAtKey(p, "tpe", obj);
             let* eff = getAtKey(p, "eff", obj);
             let* tcs = getAtKey(p, "tcs", obj);
             let* loc = getAtKey(p, "loc", obj);
-            Ok(Def(name, sym, doc, ann, tps, fps, tpe, eff, tcs, loc))
+            Ok(Def(sym, doc, ann, tps, fps, tpe, eff, tcs, loc))
     }
 
     instance FromJson[Sym] {
         pub def fromJsonAt(p: Path, json: JsonElement): Result[Sym, JsonError] =
             use Result.flatMap;
             let* obj = fromJsonAt(p, json);
-            let* ns = getAtKey(p, "namespace", obj);
             let* name = getAtKey(p, "name", obj);
             let* loc = getAtKey(p, "loc", obj);
-            Ok(Sym(ns, name, loc))
-    }
-
-    instance FromJson[ClassSym] {
-        pub def fromJsonAt(p: Path, json: JsonElement): Result[ClassSym, JsonError] =
-            use Result.flatMap;
-            let* obj = fromJsonAt(p, json);
-            let* sym = getAtKey(p, "classSym", obj);
-            let* name = getAtKey(p, "name", obj);
-            let* loc = getAtKey(p, "loc", obj);
-            Ok(ClassSym(sym, name, loc))
+            Ok(Sym(name, loc))
     }
 
     instance FromJson[Loc] {
