@@ -1,6 +1,6 @@
 use Html.{Element, t, e, +=, +<}
 use Html.Element.Text
-use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case}
+use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case, TypeAlias}
 use Api.Api.Api
 use Api.Class.Class
 use Api.Sym.Sym
@@ -13,6 +13,7 @@ use Api.Def.Def
 use Api.Instance.Instance
 use Api.Enum.Enum
 use Api.Case.Case
+use Api.TypeAlias.TypeAlias
 
 def nsToUri(ns: String): String =
     ns |> String.replace(from = "/", to = "%2F")
@@ -175,8 +176,9 @@ def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = mat
 }
 
 def classes(mdToHtml: String -> String, v: String, cs: List[Class]): Chain[Element] =
-    h2("Classes") ++
-    mapElem(clazz(mdToHtml, v), cs)
+    ifNotEmpty(cs, () ->
+        h2("Classes") ++
+        mapElem(clazz(mdToHtml, v), cs))
 
 def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match en {
     case Enum(Sym(name, loc), d, _, tps, cs, ds, _) =>
@@ -189,12 +191,29 @@ def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match
 }
 
 def enums(mdToHtml: String -> String, v: String, es: List[Enum]): Chain[Element] =
-    h2("Enums") ++
-    mapElem(enm(mdToHtml, v), es)
+    ifNotEmpty(es, () ->
+        h2("Enums") ++
+        mapElem(enm(mdToHtml, v), es))
+
+def aliaz(mdToHtml: String -> String, v: String, a0: TypeAlias): Chain[Element] = match a0 {
+    case TypeAlias(Sym(name, loc), d, tps, t0, _) =>
+        e("div") += ("class", "border") +< (
+            link(v, loc) ++
+            e("code") +< (
+                t("type alias ") ++ sym(name) ++ tparams(verbose = true, tps) ++
+                t(" = ") ++ tpe(t0)) ++
+            doc(mdToHtml, d))
+}
+
+def aliases(mdToHtml: String -> String, v: String, as0: List[TypeAlias]): Chain[Element] =
+    ifNotEmpty(as0, () ->
+        h2("Type Aliases") ++
+        mapElem(aliaz(mdToHtml, v), as0))
 
 def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
-    case Api(v, _, cs, es, _aliases, _defs) =>
+    case Api(v, _, cs, es, as0, _defs) =>
         h1(ns) ++
         (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v)) ++
-        (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v))
+        (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v)) ++
+        (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v))
 }
