@@ -13,6 +13,19 @@ namespace Html {
         import static java.net.URLEncoder.encode(String, String): String \ {};
         encode(s, "utf-8")
 
+    pub def escape(s: String): String = region r {
+        let sb = StringBuilder.new(r);
+        String.iterator(r, s) |> Iterator.forEach(c -> match c {
+            case '<' => sb |> StringBuilder.append!("&lt;")
+            case '>' => sb |> StringBuilder.append!("&gt;")
+            case '&' => sb |> StringBuilder.append!("&amp;")
+            case '"' => sb |> StringBuilder.append!("&quot;")
+            case '\'' => sb |> StringBuilder.append!("&apos;")
+            case _ => sb |> StringBuilder.append!(c)
+        });
+        StringBuilder.toString(sb)
+    }
+
     def fmtElement(e: Element): String = 
         let voidAttrs = Set#{"area",  "base",  "br",  "col",  "command",  "embed",  "hr",  "img",  "input",  "keygen",  "link",  "meta",  "param",  "source",  "track",  "wbr"};
         match e {
@@ -20,7 +33,7 @@ namespace Html {
             case Tag(name, attrs, _) if Set.memberOf(name, voidAttrs) =>"<${name} ${fmtAttrs(attrs)}>"
             case Tag(name, attrs, children) =>
                 "<${name} ${fmtAttrs(attrs)}>${children |> Chain.joinWith(fmtElement, "")}</${name}>"
-            case Text(s) => s
+            case Text(s) => escape(s)
         }
 
     def fmtAttrs(attrs: Map[String, String]): String =
