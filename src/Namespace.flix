@@ -1,7 +1,7 @@
 namespace Namespace {
     use Html.{Element, t, e, +=, +<}
     use HtmlUtils.{a, span, clz, sym, tag, h1, h2, h6, ann, card,
-                   mapIntersperse, mapElem, ifNotEmpty}
+                   mapIntersperse, mapElem, ifNotEmpty, classAnchor, enumAnchor, aliasAnchor, defnAnchor}
     use Html.Element.Text
     use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case, TypeAlias}
     use Api.Api.Api
@@ -135,7 +135,7 @@ namespace Namespace {
         mapElem(cse, cs)
 
     def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = match c {
-        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card("clazz:${name}",
+        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card(classAnchor(name),
             link(v, loc) ++
             e("code") +< (
                 t("class ") ++ sym(name) ++ tparams(verbose = true, tp :: Nil) ++ withs(scs)) ++
@@ -151,12 +151,12 @@ namespace Namespace {
             mapElem(clazz(mdToHtml, v), cs))
 
     def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match en {
-        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card("enum:${name}",
+        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card(enumAnchor(name),
             link(v, loc) ++
             e("code") +< (
                 t("enum ") ++ sym(name) ++ tparams(verbose = true, tps) ++ derivations(ds)) ++
             cases(cs) ++
-            doc(mdToHtml, d)) += ("id", "enum:${name}")
+            doc(mdToHtml, d))
     }
 
     def enums(mdToHtml: String -> String, v: String, es: List[Enum]): Chain[Element] =
@@ -165,7 +165,7 @@ namespace Namespace {
             mapElem(enm(mdToHtml, v), es))
 
     def aliaz(mdToHtml: String -> String, v: String, a0: TypeAlias): Chain[Element] = match a0 {
-        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card("alias:${name}",
+        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card(aliasAnchor(name),
             link(v, loc) ++
             e("code") +< (
                 t("type alias ") ++ sym(name) ++ tparams(verbose = true, tps) ++
@@ -179,7 +179,7 @@ namespace Namespace {
             mapElem(aliaz(mdToHtml, v), as0))
 
     def defn(mdToHtml: String -> String, v: String, d0: Def): Chain[Element] = match d0 {
-        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card("def:${name}",
+        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card(defnAnchor(name),
             link(v, loc) ++
             defOrSig(name, Option.getWithDefault(Nil, anns), tps, fps, t0, ef, ws) ++
             doc(mdToHtml, d))

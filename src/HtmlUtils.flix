@@ -1,5 +1,5 @@
 namespace HtmlUtils {
-    use Html.{Element, +=, +<, e, t}
+    use Html.{Element, +=, +<, e, t, urlencode}
 
     pub def nsToUri(ns: String): String =
         "${ns |> String.replace(from = "/", to = "%2F")}.html"
@@ -37,4 +37,15 @@ namespace HtmlUtils {
 
     pub def mapIntersperse(f: a -> Chain[Element], sep: Chain[Element], xs: List[a]): Chain[Element] =
         xs |> List.map(f) |> List.intersperse(sep) |> List.fold
+
+    def anchor(s: String, tpe: String): String =
+        "${tpe}:${s}" |> urlencode
+
+    pub def classAnchor(s: String): String = anchor("clazz", s)
+
+    pub def enumAnchor(s: String): String = anchor("enum", s)
+
+    pub def aliasAnchor(s: String): String = anchor("alias", s)
+
+    pub def defnAnchor(s: String): String = anchor("defn", s)
 }

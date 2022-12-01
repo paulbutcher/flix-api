@@ -9,6 +9,10 @@ namespace Html {
     pub def html(es: Chain[Element]): String =
         es |> Chain.joinWith(fmtElement, "")
 
+    pub def urlencode(s: String): String =
+        import static java.net.URLEncoder.encode(String, String): String \ {};
+        encode(s, "utf-8")
+
     def fmtElement(e: Element): String = 
         let voidAttrs = Set#{"area",  "base",  "br",  "col",  "command",  "embed",  "hr",  "img",  "input",  "keygen",  "link",  "meta",  "param",  "source",  "track",  "wbr"};
         match e {
