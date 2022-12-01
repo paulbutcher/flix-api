@@ -1,6 +1,9 @@
 use Html.html
 use Api.{Api, parse}
 use Api.Api.Api
+use Namespace.nspace
+use Template.template
+use HtmlUtils.nsToUri
 
 def generateNs(api: Api, mdToHtml: String -> String, ns: String): Result[Bool, String] \ IO =
     File.write("site/${nsToUri(ns)}.html",
