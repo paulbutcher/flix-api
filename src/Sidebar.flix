@@ -39,8 +39,7 @@ namespace Sidebar {
             let uri = nsToUri(ns);
             e("div") += ("class", "accordion-item") +< (
                 e("div") += ("class", "accordion-header") +< (
-                    e("button") += ("class", "accordion-button btn-small") += ("type", "button") +< (
-                        a(uri) += ("target", "main") +< t(ns))) ++
+                    a(uri) += ("class", "accordion-button") += ("target", "main") +< t(ns)) ++
                 e("div") += ("class", "accordion-collapse collapse show") +< (
                     e("div") += ("class", "accordion-body") +< (
                         (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++

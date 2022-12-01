@@ -4,9 +4,9 @@ namespace Template {
 
     pub def template(content: Chain[Element]): Chain[Element] =
         doctype("html") ++
-        e("html") += ("charset", "utf8") +< (
+        e("html") += ("lang", "en") +< (
             e("head") +< (
-                e("meta") += ("charset", "utf8") ++
+                e("meta") += ("charset", "utf-8") ++
                 e("meta") += ("name", "viewport") += ("content", "width=device-width, initial-scale=1") ++
                 (e("title") +< t("Flix API Documentation")) ++
                 e("link") +=

@@ -27,8 +27,7 @@ namespace Namespace {
 
     def doc(mdToHtml: String -> String, doc: List[String]): Chain[Element] =
         e("div") += ("class", "doc") +< (
-            e("p") +< (
-                t(doc |> List.join("\n") |> mdToHtml)))
+            t(doc |> List.join("\n") |> mdToHtml))
 
     def tparam(verbose: {verbose = Bool}, tp: TParam): Chain[Element] = match tp {
         case TParam(n, k) =>

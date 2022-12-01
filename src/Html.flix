@@ -9,12 +9,15 @@ namespace Html {
     pub def html(es: Chain[Element]): String =
         es |> Chain.joinWith(fmtElement, "")
 
-    def fmtElement(e: Element): String = match e {
-        case DocType(name) => "<!doctype ${name}>"
-        case Tag(name, attrs, children) =>
-            "<${name} ${fmtAttrs(attrs)}>${children |> Chain.joinWith(fmtElement, "")}</${name}>"
-        case Text(s) => s
-    }
+    def fmtElement(e: Element): String = 
+        let voidAttrs = Set#{"area",  "base",  "br",  "col",  "command",  "embed",  "hr",  "img",  "input",  "keygen",  "link",  "meta",  "param",  "source",  "track",  "wbr"};
+        match e {
+            case DocType(name) => "<!DOCTYPE ${name}>"
+            case Tag(name, attrs, _) if Set.memberOf(name, voidAttrs) =>"<${name} ${fmtAttrs(attrs)}>"
+            case Tag(name, attrs, children) =>
+                "<${name} ${fmtAttrs(attrs)}>${children |> Chain.joinWith(fmtElement, "")}</${name}>"
+            case Text(s) => s
+        }
 
     def fmtAttrs(attrs: Map[String, String]): String =
         attrs |> Map.joinWith(fmtAttr, " ")
