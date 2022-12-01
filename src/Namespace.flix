@@ -136,7 +136,7 @@ namespace Namespace {
         mapElem(cse, cs)
 
     def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = match c {
-        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card(
+        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card("clazz:${name}",
             link(v, loc) ++
             e("code") +< (
                 t("class ") ++ sym(name) ++ tparams(verbose = true, tp :: Nil) ++ withs(scs)) ++
@@ -152,12 +152,12 @@ namespace Namespace {
             mapElem(clazz(mdToHtml, v), cs))
 
     def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match en {
-        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card(
+        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card("enum:${name}",
             link(v, loc) ++
             e("code") +< (
                 t("enum ") ++ sym(name) ++ tparams(verbose = true, tps) ++ derivations(ds)) ++
             cases(cs) ++
-            doc(mdToHtml, d))
+            doc(mdToHtml, d)) += ("id", "enum:${name}")
     }
 
     def enums(mdToHtml: String -> String, v: String, es: List[Enum]): Chain[Element] =
@@ -166,7 +166,7 @@ namespace Namespace {
             mapElem(enm(mdToHtml, v), es))
 
     def aliaz(mdToHtml: String -> String, v: String, a0: TypeAlias): Chain[Element] = match a0 {
-        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card(
+        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card("alias:${name}",
             link(v, loc) ++
             e("code") +< (
                 t("type alias ") ++ sym(name) ++ tparams(verbose = true, tps) ++
@@ -180,7 +180,7 @@ namespace Namespace {
             mapElem(aliaz(mdToHtml, v), as0))
 
     def defn(mdToHtml: String -> String, v: String, d0: Def): Chain[Element] = match d0 {
-        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card(
+        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card("def:${name}",
             link(v, loc) ++
             defOrSig(name, Option.getWithDefault(Nil, anns), tps, fps, t0, ef, ws) ++
             doc(mdToHtml, d))

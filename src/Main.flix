@@ -26,8 +26,7 @@ def generate(): Result[Unit, String] \ IO =
             nss |> Result.traverseX(generateNs(api, mdToHtml))
     }
 
-def main(): Unit \ IO =
-    match generate() {
-        case Ok(_) => println("Site generated in: site")
-        case Err(message) => println(message)
-    }
+def main(): Unit \ IO = match generate() {
+    case Ok(_) => println("Site generated in: site")
+    case Err(message) => println(message)
+}
