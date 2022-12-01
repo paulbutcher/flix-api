@@ -22,6 +22,11 @@ namespace HtmlUtils {
 
     pub def a(href: String): Chain[Element] = e("a") += ("href", href)
 
+    pub def card(content: Chain[Element]) : Chain[Element] =
+        e("div") += ("class", "card") +< (
+            e("div") += ("class", "card-body") +<
+                content)
+
     pub def ifNotEmpty(xs: List[a], f: Unit -> Chain[Element]): Chain[Element] = match xs {
         case Nil => Chain.empty()
         case _ => f()
