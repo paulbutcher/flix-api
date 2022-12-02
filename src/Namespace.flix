@@ -1,8 +1,7 @@
 namespace Namespace {
-    use Html.{Element, t, e, +=, +<}
+    use Html.{Element, t, e, +=, +<, literal}
     use HtmlUtils.{a, span, clz, sym, tag, h1, h2, h6, ann, card,
                    mapIntersperse, mapElem, ifNotEmpty, classAnchor, enumAnchor, aliasAnchor, defnAnchor}
-    use Html.Element.Text
     use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case, TypeAlias}
     use Api.Api.Api
     use Api.Class.Class
@@ -27,7 +26,7 @@ namespace Namespace {
 
     def doc(mdToHtml: String -> String, doc: List[String]): Chain[Element] =
         e("div") += ("class", "doc") +< (
-            t(doc |> List.join("\n") |> mdToHtml))
+            literal(doc |> List.join("\n") |> mdToHtml))
 
     def tparam(verbose: {verbose = Bool}, tp: TParam): Chain[Element] = match tp {
         case TParam(n, k) =>

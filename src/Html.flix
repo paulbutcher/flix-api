@@ -4,6 +4,7 @@ namespace Html {
         case DocType(String)
         case Tag(String, Map[String, String], Chain[Element])
         case Text(String)
+        case LiteralHtml(String)
     }
 
     pub def html(es: Chain[Element]): String =
@@ -34,6 +35,7 @@ namespace Html {
             case Tag(name, attrs, children) =>
                 "<${name} ${fmtAttrs(attrs)}>${children |> Chain.joinWith(fmtElement, "")}</${name}>"
             case Text(s) => escape(s)
+            case LiteralHtml(s) => s
         }
 
     def fmtAttrs(attrs: Map[String, String]): String =
@@ -47,18 +49,22 @@ namespace Html {
 
     pub def t(x: String): Chain[Element] = Chain.singleton(Text(x))
 
+    pub def literal(x: String): Chain[Element] = Chain.singleton(LiteralHtml(x))
+
     pub def addAttribute(attr: (String, String), e: Element): Element =
         let (k, v) = attr;
         match e {
             case Tag(name, attrs, children) => Tag(name, attrs |> Map.insert(k, v), children)
             case Text(_) => bug!("Can't add attributes to text")
             case DocType(_) => bug!("Can't add attributes to doctype")
+            case LiteralHtml(_) => bug!("Can't add attributes to literal HTML")
         }
 
     pub def addChildren(newChildren: Chain[Element], e: Element): Element = match e {
         case Tag(name, attrs, children) => Tag(name, attrs, children ++ newChildren)
         case Text(_) => bug!("Can't add children to text")
-        case DocType(_) => bug!("Can't add attributes to text")
+        case DocType(_) => bug!("Can't add children to text")
+        case LiteralHtml(_) => bug!("Can't add children to literal HTML")
     }
 
     pub def +=(es: Chain[Element], attr: (String, String)): Chain[Element] =
