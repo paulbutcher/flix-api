@@ -34,23 +34,25 @@ namespace Sidebar {
                 a("${uri}#${defnAnchor(name)}") += ("target", "main") +< t(name))
     }
 
-    def nspace(api: Api, ns: String): Chain[Element] = match api {
+    def nspace(api: Api, i: Int32, ns: String): Chain[Element] = match api {
         case Api(_, _, cs, es, as0, ds) =>
             let uri = nsToUri(ns);
+            let id = "acc${i}";
             e("div") += ("class", "accordion-item") +< (
                 e("div") += ("class", "accordion-header") +< (
-                    a(uri) += ("class", "accordion-button") += ("target", "main") +< t(ns)) ++
-                e("div") += ("class", "accordion-collapse collapse show") +< (
-                    e("div") += ("class", "accordion-body") +< (
-                        (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++
-                        (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(uri))) ++
-                        (as0 |> Map.getWithDefault(ns, Nil) |> mapElem(alias0(uri)) ++
-                        (ds |> Map.getWithDefault(ns, Nil) |> mapElem(defn(uri)))))))
+                    e("button") += ("class", "accordion-button") += ("target", "main") +=
+                        ("data-bs-toggle", "collapse") += ("data-bs-target", "#${id}") +< t(ns)) ++
+            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += ("data-bs-parent", "#accordion") +< (
+                e("div") += ("class", "accordion-body") +< (
+                    (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++
+                (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(uri))) ++
+                (as0 |> Map.getWithDefault(ns, Nil) |> mapElem(alias0(uri)) ++
+                (ds |> Map.getWithDefault(ns, Nil) |> mapElem(defn(uri)))))))
     }
 
     pub def sidebar(api: Api): Chain[Element] = match api {
         case Api(_, nss, _, _, _, _) =>
-            e("div") += ("class", "accordion") +<
-                mapElem(nspace(api), nss)
+            e("div") += ("class", "accordion") += ("id", "accordion") +<
+                (nss |> List.mapWithIndex(nspace(api)) |> List.fold)
     }
 }
