@@ -1,0 +1,28 @@
+code {
+  color: hsl(210, 11%, 35%);
+}
+
+.sym {
+  color: hsl(330, 67%, 52%);
+}
+
+.tparam {
+  color: hsl(220, 61%, 48%);
+}
+
+.kind {
+  color: hsl(210, 11%, 75%);
+}
+
+.fparam {
+  color: hsl(220, 61%, 25%);
+  font-style: italic;
+}
+
+.tpe {
+  color: hsl(100, 61%, 40%);
+}
+
+.clz {
+  text-decoration: underline;
+}
