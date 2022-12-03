@@ -2,7 +2,7 @@ namespace HtmlUtils {
     use Html.{Element, +=, +<, e, t, urlencode}
 
     pub def nsToUri(ns: String): String =
-        "${ns |> String.replace(from = "/", to = "%2F")}.html"
+        "${ns |> String.replace(from = "/", to = ".")}.html"
 
     pub def span(clazz: String): Chain[Element] = e("span") += ("class", clazz)
 
