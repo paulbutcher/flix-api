@@ -1,6 +1,6 @@
 namespace Sidebar {
     use Html.{t, e, +=, +<, Element}
-    use HtmlUtils.{a, mapElem, nsToUri, classAnchor, enumAnchor, aliasAnchor, defnAnchor}
+    use HtmlUtils.{a, mapElem, nsToUri, classAnchor, enumAnchor, aliasAnchor, defnAnchor, span}
     use Api.{Class, Enum, TypeAlias, Def}
     use Api.Api
     use Api.Api.Api
@@ -50,9 +50,16 @@ namespace Sidebar {
                 (ds |> Map.getWithDefault(ns, Nil) |> mapElem(defn(uri)))))))
     }
 
+    def logo(v: String): Chain[Element] = 
+        e("div") +< (
+            (span("logo") +< t("flix")) ++
+            (span("version") +< t(v)))
+
     pub def sidebar(api: Api): Chain[Element] = match api {
-        case Api(_, nss, _, _, _, _) =>
-            e("div") += ("class", "accordion") += ("id", "accordion") +<
-                (nss |> List.mapWithIndex(nspace(api)) |> List.fold)
+        case Api(v, nss, _, _, _, _) =>
+            e("div") += ("class", "sidebar") +< (
+                logo(v) ++
+                e("div") += ("class", "accordion") += ("id", "accordion") +<
+                    (nss |> List.mapWithIndex(nspace(api)) |> List.fold))
     }
 }

@@ -76,3 +76,19 @@ code {
   margin-left: 1rem;
   margin-top: 0.5rem;
 }
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #202020;
+}
+
+.version {
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  color: #8a8a8a;
+}
+
+.sidebar {
+  margin-left: 0.5rem;
+}
