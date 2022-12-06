@@ -23,7 +23,7 @@ namespace HtmlUtils {
     pub def a(href: String): Chain[Element] = e("a") += ("href", href)
 
     pub def card(id: String, content: Chain[Element]) : Chain[Element] =
-        e("div") += ("class", "card shadow m-3") += ("id", id) +< (
+        e("div") += ("class", "card") += ("id", id) +< (
             e("div") += ("class", "card-body") +<
                 content)
 

@@ -26,3 +26,26 @@ code {
 .clz {
   text-decoration: underline;
 }
+
+.card {
+  margin: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.accordion-button {
+  padding: 0 0 0 1.5rem;
+}
+
+.accordion-button:after {
+  position: absolute;
+  left: 0;
+}
+
+.accordion-item {
+  border: 0;
+}
+
+.accordion-body {
+  padding: 0;
+  margin-left: 1.5rem;
+}
