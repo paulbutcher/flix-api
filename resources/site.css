@@ -16,6 +16,11 @@ h2 {
   margin-left: 2rem;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 code {
   font-family: "Fira Code", monospace !important;
   color: hsl(210, 11%, 35%);
@@ -54,6 +59,11 @@ code {
 
 .accordion-button {
   padding: 0 0 0 1.5rem;
+  background-color: inherit;
+}
+
+.accordion-button:not(.collapsed) {
+  color: inherit;
   background-color: inherit;
 }
 
