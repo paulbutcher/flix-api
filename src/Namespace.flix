@@ -99,7 +99,8 @@ namespace Namespace {
     def signatures(sigs: List[Sig]): Chain[Element] = 
         ifNotEmpty(sigs, () ->
             h6("Signatures") ++
-            mapElem(signature, sigs))
+            e("div") += ("class", "detail") +<
+                mapElem(signature, sigs))
 
     def classDefn(d: Def): Chain[Element] = match d {
         case Def(Sym(name, _), _, anns, tps, fps, t0, ef, ws, _) =>
@@ -109,7 +110,8 @@ namespace Namespace {
     def classDefs(ds: List[Def]): Chain[Element] = 
         ifNotEmpty(ds, () ->
             h6("Definitions") ++
-            mapElem(classDefn, ds))
+            e("div") += ("class", "detail") +<
+                mapElem(classDefn, ds))
 
     def inst(v: String, i: Instance): Chain[Element] = match i {
         case Instance(_, _, t0, ws, loc) =>
@@ -121,7 +123,8 @@ namespace Namespace {
     def insts(v: String, is: List[Instance]): Chain[Element] = 
         ifNotEmpty(is, () ->
             h6("Instances") ++
-            mapElem(inst(v), is))
+            e("div") += ("class", "detail") +<
+                mapElem(inst(v), is))
 
     def cse(c: Case): Chain[Element] = match c {
         case Case(tg, t0) =>
