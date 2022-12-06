@@ -89,7 +89,7 @@ code {
 
 .accordion-body {
   padding: 0;
-  margin-left: 1.5rem;
+  margin-left: 1rem;
 }
 
 .doc {
@@ -117,4 +117,30 @@ code {
 
 .sidebar {
   margin-left: 0.5rem;
+}
+
+.sidebar-link {
+  white-space: nowrap;
+}
+
+.pill {
+  font-size: 70%;
+  position: relative;
+  top: -2px;
+}
+
+.pill-c {
+  color: hsl(2, 94%, 80%);
+}
+
+.pill-e {
+  color: hsl(60, 22%, 72%);
+}
+
+.pill-a {
+  color: hsl(25, 86%, 83%);
+}
+
+.pill-d {
+  color: hsl(153, 22%, 60%);
 }

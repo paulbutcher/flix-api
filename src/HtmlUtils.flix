@@ -27,6 +27,9 @@ namespace HtmlUtils {
             e("div") += ("class", "card-body") +<
                 content)
 
+    pub def pill(s: String): Chain[Element] =
+        (e("i") += ("class", "bi-record-circle-fill pill pill-${s}")) ++ t(" ")
+
     pub def ifNotEmpty(xs: List[a], f: Unit -> Chain[Element]): Chain[Element] = match xs {
         case Nil => Chain.empty()
         case _ => f()
