@@ -1,4 +1,23 @@
+body {
+  background-color: #fcfcfc;
+}
+
+h1, h2, h3 {
+  font-family: "Oswald", sans-serif;
+}
+
+h1 {
+  font-size: 4.5rem;
+  margin-left: 2rem;
+}
+
+h2 {
+  margin-top: 3rem;
+  margin-left: 2rem;
+}
+
 code {
+  font-family: "Fira Code", monospace !important;
   color: hsl(210, 11%, 35%);
 }
 
@@ -30,10 +49,12 @@ code {
 .card {
   margin: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  background-color: inherit;
 }
 
 .accordion-button {
   padding: 0 0 0 1.5rem;
+  background-color: inherit;
 }
 
 .accordion-button:after {
@@ -43,9 +64,15 @@ code {
 
 .accordion-item {
   border: 0;
+  background-color: inherit;
 }
 
 .accordion-body {
   padding: 0;
   margin-left: 1.5rem;
+}
+
+.doc {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
 }

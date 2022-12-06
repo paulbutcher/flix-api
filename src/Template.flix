@@ -17,6 +17,12 @@ namespace Template {
                 e("link") +=
                     ("href", "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css") +=
                     ("rel", "stylesheet") ++
+                e("link") +=
+                    ("href", "https://fonts.googleapis.com/css?family=Fira+Code&display=swap") +=
+                    ("rel", "stylesheet") ++
+                e("link") +=
+                    ("href", "https://fonts.googleapis.com/css?family=Oswald&display=swap") +=
+                    ("rel", "stylesheet") ++
                 e("link") += ("href", "site.css") += ("rel", "stylesheet")) ++
             e("body") +< (
                 e("div") += ("class", "container-auto") +<
