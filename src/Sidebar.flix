@@ -40,7 +40,7 @@ namespace Sidebar {
             let id = "acc${i}";
             e("div") += ("class", "accordion-item") +< (
                 e("div") += ("class", "accordion-header") +< (
-                    e("button") += ("class", "accordion-button") += ("target", "main") +=
+                    e("button") += ("class", "accordion-button collapsed") += ("target", "main") +=
                         ("data-bs-toggle", "collapse") += ("data-bs-target", "#${id}") +< t(ns)) ++
             e("div") += ("id", id) += ("class", "accordion-collapse collapse") += ("data-bs-parent", "#accordion") +< (
                 e("div") += ("class", "accordion-body") +< (
