@@ -48,9 +48,10 @@ namespace Sidebar {
             let id = "acc${i}";
             e("div") += ("class", "accordion-item") +< (
                 e("div") += ("class", "accordion-header") +< (
-                    e("button") += ("class", "accordion-button collapsed") += ("target", "main") +=
+                    e("button") += ("class", "accordion-button collapsed") +=
                         ("data-bs-toggle", "collapse") += ("data-bs-target", "#${id}") +< t(ns)) ++
-            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += ("data-bs-parent", "#accordion") +< (
+            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += 
+                ("data-bs-parent", "#accordion") += ("data-href", uri) +< (
                 e("div") += ("class", "accordion-body") +< (
                     (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++
                     (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(uri))) ++
@@ -63,11 +64,12 @@ namespace Sidebar {
             (span("logo") +< t("flix")) ++
             (span("version") +< t(v)))
 
-    pub def sidebar(api: Api): Chain[Element] = match api {
+    pub def sidebar0(api: Api): Chain[Element] = match api {
         case Api(v, nss, _, _, _, _) =>
-            e("div") += ("class", "sidebar") +< (
+            (e("div") += ("class", "sidebar") +< (
                 logo(v) ++
                 e("div") += ("class", "accordion") += ("id", "accordion") +<
-                    (nss |> List.mapWithIndex(nspace(api)) |> List.fold))
+                    (nss |> List.mapWithIndex(nspace(api)) |> List.fold))) ++
+            e("script") += ("src", "sidebar.js")
     }
 }

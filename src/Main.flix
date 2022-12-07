@@ -19,6 +19,7 @@ def generate(): Result[Unit, String] \ IO =
     let* api = parse("api.json");
     let* _ = File.mkdir("site");
     let* _ = File.copyOver(src = "resources/site.css", "site/site.css");
+    let* _ = File.copyOver(src = "resources/sidebar.js", "site/sidebar.js");
     let* _ = index() |> writeFile("site/index.html");
     let* _ = sidebar(api) |> writeFile("site/sidebar.html");
     match api {
