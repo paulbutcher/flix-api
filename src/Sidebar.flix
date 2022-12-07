@@ -64,7 +64,7 @@ namespace Sidebar {
             (span("logo") +< t("flix")) ++
             (span("version") +< t(v)))
 
-    pub def sidebar0(api: Api): Chain[Element] = match api {
+    pub def sidebar(api: Api): Chain[Element] = match api {
         case Api(v, nss, _, _, _, _) =>
             (e("div") += ("class", "sidebar") +< (
                 logo(v) ++
