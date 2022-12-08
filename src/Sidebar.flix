@@ -50,8 +50,7 @@ namespace Sidebar {
                 e("div") += ("class", "accordion-header") +< (
                     e("button") += ("class", "accordion-button collapsed") +=
                         ("data-bs-toggle", "collapse") += ("data-bs-target", "#${id}") +< t(ns)) ++
-            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += 
-                ("data-bs-parent", "#accordion") += ("data-href", uri) +< (
+            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += ("data-href", uri) +< (
                 e("div") += ("class", "accordion-body") +< (
                     (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++
                     (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(uri))) ++

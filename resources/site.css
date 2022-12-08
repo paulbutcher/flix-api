@@ -74,6 +74,8 @@ code {
 
 .accordion-button:not(.collapsed) {
   color: inherit;
+  background-color: inherit;
+  box-shadow: none;
 }
 
 .accordion-button:not(.collapsed)::after {

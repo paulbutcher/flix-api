@@ -79,7 +79,7 @@ namespace Namespace {
 
     def annotations(anns: List[String]): Chain[Element] = 
         ifNotEmpty(anns, () ->
-            mapIntersperse(ann, t(", "), anns))
+            mapIntersperse(ann, t(", "), anns) ++ e("br"))
 
     def defOrSig(name: String, anns: List[String], tps: List[TParam], fps: List[FParam], t0: String, ef: String, ws: List[With]): Chain[Element] =
         e("div") +<
