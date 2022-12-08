@@ -1,6 +1,6 @@
 namespace Sidebar {
     use Html.{t, e, +=, +<, Element}
-    use HtmlUtils.{a, mapElem, nsToUri, classAnchor, enumAnchor, aliasAnchor, defnAnchor, span, pill}
+    use HtmlUtils.{a, mapElem, classAnchor, enumAnchor, aliasAnchor, defnAnchor, span, pill}
     use Api.{Class, Enum, TypeAlias, Def}
     use Api.Api
     use Api.Api.Api
@@ -10,52 +10,51 @@ namespace Sidebar {
     use Api.TypeAlias.TypeAlias
     use Api.Def.Def
 
-    def clazz(uri: String, c: Class): Chain[Element] = match c {
+    def clazz(ns: String, c: Class): Chain[Element] = match c {
         case Class(Sym(name, _), _, _, _, _, _, _, _, _) =>
             e("div") += ("class", "sidebar-link") +< (
-                a("${uri}#${classAnchor(name)}") += ("target", "main") +< (
+                a("#${classAnchor(ns, name)}") +< (
                     pill("c") ++
                     t(name)))
     }
 
-    def enum0(uri: String, e0: Enum): Chain[Element] = match e0 {
+    def enum0(ns: String, e0: Enum): Chain[Element] = match e0 {
         case Enum(Sym(name, _), _, _, _, _, _, _) =>
             e("div") +< (
-                a("${uri}#${enumAnchor(name)}") += ("target", "main") +< (
+                a("#${enumAnchor(ns, name)}") +< (
                     pill("e") ++
                     t(name)))
     }
 
-    def alias0(uri: String, a0: TypeAlias): Chain[Element] = match a0 {
+    def alias0(ns: String, a0: TypeAlias): Chain[Element] = match a0 {
         case TypeAlias(Sym(name, _), _, _, _, _) =>
             e("div") +< (
-                a("${uri}#${aliasAnchor(name)}") += ("target", "main") +< (
+                a("#${aliasAnchor(ns, name)}") +< (
                     pill("a") ++
                     t(name)))
     }
 
-    def defn(uri: String, d: Def): Chain[Element] = match d {
+    def defn(ns: String, d: Def): Chain[Element] = match d {
         case Def(Sym(name, _), _, _, _, _, _, _, _, _) =>
             e("div") +< (
-                a("${uri}#${defnAnchor(name)}") += ("target", "main") +< (
+                a("#${defnAnchor(ns, name)}") +< (
                     pill("d") ++
                     t(name)))
     }
 
     def nspace(api: Api, i: Int32, ns: String): Chain[Element] = match api {
         case Api(_, _, cs, es, as0, ds) =>
-            let uri = nsToUri(ns);
             let id = "acc${i}";
             e("div") += ("class", "accordion-item") +< (
                 e("div") += ("class", "accordion-header") +< (
                     e("button") += ("class", "accordion-button collapsed") +=
                         ("data-bs-toggle", "collapse") += ("data-bs-target", "#${id}") +< t(ns)) ++
-            e("div") += ("id", id) += ("class", "accordion-collapse collapse") += ("data-href", uri) +< (
+            e("div") += ("id", id) += ("class", "accordion-collapse collapse") +< (
                 e("div") += ("class", "accordion-body") +< (
-                    (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(uri))) ++
-                    (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(uri))) ++
-                    (as0 |> Map.getWithDefault(ns, Nil) |> mapElem(alias0(uri)) ++
-                    (ds |> Map.getWithDefault(ns, Nil) |> mapElem(defn(uri)))))))
+                    (cs |> Map.getWithDefault(ns, Nil) |> mapElem(clazz(ns))) ++
+                    (es |> Map.getWithDefault(ns, Nil) |> mapElem(enum0(ns))) ++
+                    (as0 |> Map.getWithDefault(ns, Nil) |> mapElem(alias0(ns)) ++
+                    (ds |> Map.getWithDefault(ns, Nil) |> mapElem(defn(ns)))))))
     }
 
     def logo(v: String): Chain[Element] = 

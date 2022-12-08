@@ -1,9 +1,6 @@
 namespace HtmlUtils {
     use Html.{Element, +=, +<, e, t, urlencode}
 
-    pub def nsToUri(ns: String): String =
-        "${ns |> String.replace(from = "/", to = ".")}.html"
-
     pub def span(clazz: String): Chain[Element] = e("span") += ("class", clazz)
 
     pub def sym(s: String): Chain[Element] = span("sym") +< t(s)
@@ -41,14 +38,16 @@ namespace HtmlUtils {
     pub def mapIntersperse(f: a -> Chain[Element], sep: Chain[Element], xs: List[a]): Chain[Element] =
         xs |> List.map(f) |> List.intersperse(sep) |> List.fold
 
-    def anchor(s: String, tpe: String): String =
-        "${tpe}:${s}" |> urlencode
+    def anchor(tpe: String, ns: String, s: String): String =
+        "${tpe}:${ns}:${s}" |> urlencode
 
-    pub def classAnchor(s: String): String = anchor("clazz", s)
+    pub def classAnchor(ns: String, s: String): String = anchor("clazz", ns, s)
 
-    pub def enumAnchor(s: String): String = anchor("enum", s)
+    pub def enumAnchor(ns: String, s: String): String = anchor("enum", ns, s)
 
-    pub def aliasAnchor(s: String): String = anchor("alias", s)
+    pub def aliasAnchor(ns: String, s: String): String = anchor("alias", ns, s)
 
-    pub def defnAnchor(s: String): String = anchor("defn", s)
+    pub def defnAnchor(ns: String, s: String): String = anchor("defn", ns, s)
+
+    pub def nsAnchor(ns: String): String = ns
 }

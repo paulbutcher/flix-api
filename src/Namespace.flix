@@ -1,7 +1,7 @@
 namespace Namespace {
     use Html.{Element, t, e, +=, +<, literal}
     use HtmlUtils.{a, span, clz, sym, tag, h1, h2, h6, ann, card,
-                   mapIntersperse, mapElem, ifNotEmpty, classAnchor, enumAnchor, aliasAnchor, defnAnchor}
+                   mapIntersperse, mapElem, ifNotEmpty, classAnchor, enumAnchor, aliasAnchor, defnAnchor, nsAnchor}
     use Api.{Api, Class, Sym, TParam, With, Loc, Sig, FParam, Def, Instance, Enum, Case, TypeAlias}
     use Api.Api.Api
     use Api.Class.Class
@@ -136,8 +136,8 @@ namespace Namespace {
     def cases(cs: List[Case]): Chain[Element] =
         mapElem(cse, cs)
 
-    def clazz(mdToHtml: String -> String, v: String, c: Class): Chain[Element] = match c {
-        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card(classAnchor(name),
+    def clazz(mdToHtml: String -> String, v: String, ns: String, c: Class): Chain[Element] = match c {
+        case Class(Sym(name, loc), d, _, _, tp, scs, sigs, ds, is) => card(classAnchor(ns, name),
             link(v, loc) ++
             e("code") +< (
                 t("class ") ++ sym(name) ++ tparams(verbose = true, tp :: Nil) ++ withs(scs)) ++
@@ -147,13 +147,13 @@ namespace Namespace {
             insts(v, is))
     }
 
-    def classes(mdToHtml: String -> String, v: String, cs: List[Class]): Chain[Element] =
+    def classes(mdToHtml: String -> String, v: String, ns: String, cs: List[Class]): Chain[Element] =
         ifNotEmpty(cs, () ->
             h2("Classes") ++
-            mapElem(clazz(mdToHtml, v), cs))
+            mapElem(clazz(mdToHtml, v, ns), cs))
 
-    def enm(mdToHtml: String -> String, v: String, en: Enum): Chain[Element] = match en {
-        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card(enumAnchor(name),
+    def enm(mdToHtml: String -> String, v: String, ns: String, en: Enum): Chain[Element] = match en {
+        case Enum(Sym(name, loc), d, _, tps, cs, ds, _) => card(enumAnchor(ns, name),
             link(v, loc) ++
             e("code") +< (
                 t("enum ") ++ sym(name) ++ tparams(verbose = true, tps) ++ derivations(ds)) ++
@@ -161,13 +161,13 @@ namespace Namespace {
             doc(mdToHtml, d))
     }
 
-    def enums(mdToHtml: String -> String, v: String, es: List[Enum]): Chain[Element] =
+    def enums(mdToHtml: String -> String, v: String, ns: String, es: List[Enum]): Chain[Element] =
         ifNotEmpty(es, () ->
             h2("Enums") ++
-            mapElem(enm(mdToHtml, v), es))
+            mapElem(enm(mdToHtml, v, ns), es))
 
-    def aliaz(mdToHtml: String -> String, v: String, a0: TypeAlias): Chain[Element] = match a0 {
-        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card(aliasAnchor(name),
+    def aliaz(mdToHtml: String -> String, v: String, ns: String, a0: TypeAlias): Chain[Element] = match a0 {
+        case TypeAlias(Sym(name, loc), d, tps, t0, _) => card(aliasAnchor(ns, name),
             link(v, loc) ++
             e("code") +< (
                 t("type alias ") ++ sym(name) ++ tparams(verbose = true, tps) ++
@@ -175,29 +175,34 @@ namespace Namespace {
             doc(mdToHtml, d))
     }
 
-    def aliases(mdToHtml: String -> String, v: String, as0: List[TypeAlias]): Chain[Element] =
+    def aliases(mdToHtml: String -> String, v: String, ns: String, as0: List[TypeAlias]): Chain[Element] =
         ifNotEmpty(as0, () ->
             h2("Type Aliases") ++
-            mapElem(aliaz(mdToHtml, v), as0))
+            mapElem(aliaz(mdToHtml, v, ns), as0))
 
-    def defn(mdToHtml: String -> String, v: String, d0: Def): Chain[Element] = match d0 {
-        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card(defnAnchor(name),
+    def defn(mdToHtml: String -> String, v: String, ns: String, d0: Def): Chain[Element] = match d0 {
+        case Def(Sym(name, loc), d, anns, tps, fps, t0, ef, ws, _) => card(defnAnchor(ns, name),
             link(v, loc) ++
             defOrSig(name, Option.getWithDefault(Nil, anns), tps, fps, t0, ef, ws) ++
             doc(mdToHtml, d))
     }
 
-    def defs(mdToHtml: String -> String, v: String, d0: List[Def]): Chain[Element] =
+    def defs(mdToHtml: String -> String, v: String, ns: String, d0: List[Def]): Chain[Element] =
         ifNotEmpty(d0, () ->
             h2("Definitions") ++
-            mapElem(defn(mdToHtml, v), d0))
+            mapElem(defn(mdToHtml, v, ns), d0))
 
-    pub def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
+    def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
         case Api(v, _, cs, es, as0, ds) =>
-            h1(ns) ++
-            (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v)) ++
-            (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v)) ++
-            (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v)) ++
-            (ds |> Map.getWithDefault(ns, Nil) |> defs(mdToHtml, v))
+            h1(ns) += ("id", nsAnchor(ns)) ++
+            (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v, ns)) ++
+            (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v, ns)) ++
+            (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v, ns)) ++
+            (ds |> Map.getWithDefault(ns, Nil) |> defs(mdToHtml, v, ns))
+    }
+
+    pub def namespaces(api: Api, mdToHtml: String -> String): Chain[Element] = match api {
+        case Api(_, nss, _, _, _, _) =>
+            nss |> List.toChain |> Chain.flatMap(nspace(api, mdToHtml))
     }
 }
