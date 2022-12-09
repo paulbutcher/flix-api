@@ -203,6 +203,7 @@ namespace Namespace {
 
     pub def namespaces(api: Api, mdToHtml: String -> String): Chain[Element] = match api {
         case Api(_, nss, _, _, _, _) =>
-            nss |> List.toChain |> Chain.flatMap(nspace(api, mdToHtml))
+            e("div") += ("class", "main") +< (
+                nss |> List.toChain |> Chain.flatMap(nspace(api, mdToHtml)))
     }
 }

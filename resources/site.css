@@ -4,6 +4,7 @@
 
 body {
   background-color: #fcfcfc;
+  display: flex;
 }
 
 h1, h2, h3 {
@@ -28,6 +29,12 @@ a {
 code {
   font-family: "Fira Code", monospace !important;
   color: hsl(210, 11%, 35%);
+}
+
+.main {
+  overflow-y: scroll;
+  height: 100vh;
+  flex: 1 0 0%
 }
 
 .sym {
@@ -118,7 +125,11 @@ code {
 }
 
 .sidebar {
-  margin-left: 0.5rem;
+  overflow: scroll;
+  height: 100vh;
+  flex: 0 0 auto;
+  width: 10rem;
+  margin-left: 1rem;
 }
 
 .sidebar-link {
