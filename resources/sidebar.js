@@ -19,10 +19,19 @@ function makeNsActive(ns) {
 function makeNsInactive(ns) {
   activeNamespaces.delete(ns)
   ns.classList.remove("active")
-  if(activeNamespaces.size == 0)
+  if(activeNamespaces.size == 0) {
     defaultNamespace.classList.add("active")
+    defaultNamespace.scrollIntoView()
+  }
 }
 
+var activeDoc = null
+
 function showDoc(id) {
-  document.querySelector("#" + CSS.escape(id)).scrollIntoView({behavior: "smooth", block: "center"})
+  let el = document.querySelector("#" + CSS.escape(id))
+  el.scrollIntoView({behavior: "smooth", block: "center"})
+  if(activeDoc)
+    activeDoc.classList.remove("active")
+  activeDoc = el
+  el.classList.add("active")
 }
