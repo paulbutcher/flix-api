@@ -128,12 +128,13 @@ code {
   overflow: scroll;
   height: 100vh;
   flex: 0 0 auto;
-  width: 10rem;
+  width: 12rem;
   margin-left: 1rem;
 }
 
 .sidebar-link {
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .pill {

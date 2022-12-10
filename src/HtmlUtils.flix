@@ -1,5 +1,5 @@
 namespace HtmlUtils {
-    use Html.{Element, +=, +<, e, t, urlencode}
+    use Html.{Element, +=, +<, e, t}
 
     pub def span(clazz: String): Chain[Element] = e("span") += ("class", clazz)
 
@@ -39,7 +39,7 @@ namespace HtmlUtils {
         xs |> List.map(f) |> List.intersperse(sep) |> List.fold
 
     def anchor(tpe: String, ns: String, s: String): String =
-        "${tpe}:${ns}:${s}" |> urlencode
+        "${tpe}:${ns}:${s}"
 
     pub def classAnchor(ns: String, s: String): String = anchor("clazz", ns, s)
 
