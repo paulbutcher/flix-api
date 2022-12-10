@@ -1,6 +1,6 @@
-var defaultNamespace = document.querySelector("#Prelude")
+const defaultNamespace = document.querySelector("#Prelude")
 defaultNamespace.classList.add("active")
-var activeNamespaces = new Set()
+const activeNamespaces = new Set()
 
 document.querySelectorAll('.accordion-collapse').forEach(el => {
   let ns = document.querySelector("#" + CSS.escape(el.getAttribute("data-ns")))
