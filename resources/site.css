@@ -37,6 +37,14 @@ code {
   flex: 1 0 0%
 }
 
+.nspace {
+  display: none;
+}
+
+.nspace.active {
+  display: block;
+}
+
 .sym {
   color: hsl(330, 67%, 52%);
 }

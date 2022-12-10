@@ -64,10 +64,9 @@ namespace Sidebar {
 
     pub def sidebar(api: Api): Chain[Element] = match api {
         case Api(v, nss, _, _, _, _) =>
-            (e("div") += ("class", "sidebar") +< (
+            e("div") += ("class", "sidebar") +< (
                 logo(v) ++
                 e("div") += ("class", "accordion") += ("id", "accordion") +<
-                    (nss |> List.mapWithIndex(nspace(api)) |> List.fold))) ++
-            e("script") += ("src", "sidebar.js")
+                    (nss |> List.mapWithIndex(nspace(api)) |> List.fold))
     }
 }

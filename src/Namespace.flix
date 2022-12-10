@@ -194,11 +194,12 @@ namespace Namespace {
 
     def nspace(api: Api, mdToHtml: String -> String, ns: String): Chain[Element] = match api {
         case Api(v, _, cs, es, as0, ds) =>
-            h1(ns) += ("id", nsAnchor(ns)) ++
-            (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v, ns)) ++
-            (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v, ns)) ++
-            (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v, ns)) ++
-            (ds |> Map.getWithDefault(ns, Nil) |> defs(mdToHtml, v, ns))
+            e("div") += ("class", "nspace") += ("id", nsAnchor(ns)) +< (
+                h1(ns) ++
+                (cs |> Map.getWithDefault(ns, Nil) |> classes(mdToHtml, v, ns)) ++
+                (es |> Map.getWithDefault(ns, Nil) |> enums(mdToHtml, v, ns)) ++
+                (as0 |> Map.getWithDefault(ns, Nil) |> aliases(mdToHtml, v, ns)) ++
+                (ds |> Map.getWithDefault(ns, Nil) |> defs(mdToHtml, v, ns)))
     }
 
     pub def namespaces(api: Api, mdToHtml: String -> String): Chain[Element] = match api {
