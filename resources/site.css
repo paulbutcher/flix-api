@@ -85,6 +85,11 @@ code {
   background-color: inherit;
 }
 
+.accordion-button.disabled {
+  pointer-events: none;
+  color: #8a8a8a;
+}
+
 .accordion-button:after {
   position: absolute;
   left: 0;
@@ -169,4 +174,9 @@ code {
 
 .pill-d {
   color: hsl(153, 22%, 60%);
+}
+
+.search {
+  margin: 0.2rem;
+  width: 10rem;
 }
