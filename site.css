@@ -150,6 +150,7 @@ code {
   height: 100vh;
   flex: 0 0 auto;
   width: 12rem;
+  max-width: 25%;
   margin-left: 1rem;
 }
 
