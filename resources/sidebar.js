@@ -1,8 +1,18 @@
 const defaultNamespace = document.querySelector("#Prelude")
-defaultNamespace.classList.add("active")
 const activeNamespaces = new Set()
 
 const namespaces = new Map()
+
+window.addEventListener("load", _ => {
+  let hash = decodeURIComponent(window.location.hash)
+  if (hash.length > 0) {
+    let [_, id, ns] = hash.match(/#((.*):.*:.*)/)
+    makeNsActive(document.querySelector("#" + CSS.escape(ns)))
+    showDoc(id)
+  } else {
+    defaultNamespace.classList.add("active")
+  }
+});
 
 document.querySelectorAll('.accordion-item').forEach(item => {
   let ns = document.querySelector("#" + CSS.escape(item.getAttribute("data-ns")))

@@ -39,7 +39,7 @@ namespace HtmlUtils {
         xs |> List.map(f) |> List.intersperse(sep) |> List.fold
 
     def anchor(tpe: String, ns: String, s: String): String =
-        "${tpe}:${ns}:${s}"
+        "${ns}:${s}:${tpe}"
 
     pub def classAnchor(ns: String, s: String): String = anchor("clazz", ns, s)
 
