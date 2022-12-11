@@ -47,6 +47,7 @@ function makeNsInactive(ns) {
 var activeDoc = null
 
 function showDoc(id) {
+  window.location.hash = "#" + id
   let el = document.querySelector("#" + CSS.escape(id))
   el.scrollIntoView({behavior: "smooth", block: "center"})
   if (activeDoc)
